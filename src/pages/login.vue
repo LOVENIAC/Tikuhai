@@ -186,22 +186,22 @@ export default {
       isDisbaled: false,
     };
   },
+  beforeCreate() {
+    this.$http.get("/v1/u/info").then(res=>{
+      if(res.data.code===200) this.$router.push('/admin');
+    })
+  },
   async mounted() {
-    const { data: res } = await this.$http.get(
-      "http://open.tikuhai.com/v1/captcha"
-    );
+    const { data: res } = await this.$http.get("/v1/captcha");
     this.captcha_img = res.data.captcha_img;
     this.captcha_key = res.data.captcha_key;
   },
   methods: {
     // 获取静态验证码
     async vertifyCode() {
-      const { data: res } = await this.$http.post(
-        "http://open.tikuhai.com/v1/captcha1",
-        {
-          email: this.registerForm.email,
-        }
-      );
+      const { data: res } = await this.$http.post("/v1/captcha1", {
+        email: this.registerForm.email,
+      });
       if (res.code !== 200) this.$message.error(res.msg);
       else {
         this.captcha_img = res.data.captcha_img;
@@ -212,14 +212,11 @@ export default {
     // dialog确认发送动态验证码
     async sendDynamicVerifyCode() {
       let _this = this;
-      const { data: res } = await this.$http.post(
-        "http://open.tikuhai.com/v1/sendCode",
-        {
-          email: _this.registerForm.email,
-          key: _this.captcha_key,
-          code: _this.registerForm.verifyCode,
-        }
-      );
+      const { data: res } = await this.$http.post("/v1/sendCode", {
+        email: _this.registerForm.email,
+        key: _this.captcha_key,
+        code: _this.registerForm.verifyCode,
+      });
       if (res.code === 200) {
         this.$message.success("发送验证码成功，请去邮箱查看～");
         this.setTime();
@@ -265,9 +262,7 @@ export default {
     },
     // 切换动态验证码
     async chagneCode() {
-      const { data: res } = await this.$http.get(
-        "http://open.tikuhai.com/v1/captcha"
-      );
+      const { data: res } = await this.$http.get("/v1/captcha");
       this.captcha_img = res.data.captcha_img;
       this.captcha_key = res.data.captcha_key;
     },
@@ -281,18 +276,14 @@ export default {
       //     password: _this.loginForm.password,
       //   }
       // );
-      let { data: res } = await this.$http.post(
-        "http://open.tikuhai.com/v1/u/login",
-        {
-          key: _this.captcha_key,
-          code: _this.loginForm.verifyCode,
-          email: _this.loginForm.email,
-          password: _this.loginForm.password,
-        }
-      );
-      console.log(res);
+      let { data: res } = await this.$http.post("/v1/u/login", {
+        key: _this.captcha_key,
+        code: _this.loginForm.verifyCode,
+        email: _this.loginForm.email,
+        password: _this.loginForm.password,
+      });
       if (res.code === 200) {
-        localStorage.setItem('token',res.data.token);
+        localStorage.setItem("token", res.data.token);
         this.$message.success("登录成功～");
         _this.$router.push("/admin");
       } else {
@@ -309,19 +300,16 @@ export default {
       //     password: _this.registerForm.password,
       //     password_confirmation: _this.registerForm.password,
       //   });
-      let { data: res } = await this.$http.post(
-        "http://open.tikuhai.com/v1/register",
-        {
-          key: _this.registerForm.email_key,
-          code: _this.registerForm.dynamicVerifyCode,
-          email: _this.registerForm.email,
-          password: _this.registerForm.password,
-          password_confirmation: _this.registerForm.password,
-        }
-      );
+      let { data: res } = await this.$http.post("/v1/register", {
+        key: _this.registerForm.email_key,
+        code: _this.registerForm.dynamicVerifyCode,
+        email: _this.registerForm.email,
+        password: _this.registerForm.password,
+        password_confirmation: _this.registerForm.password,
+      });
       if (res.code !== 200) this.$message.error(res.msg);
       else {
-        localStorage.setItem('token',res.data.token);
+        localStorage.setItem("token", res.data.token);
         this.$message.success("注册成功～");
         _this.$router.push("/admin");
       }
@@ -395,8 +383,18 @@ export default {
     /deep/ .el-tabs__nav-wrap::after {
       height: 1px;
     }
+    /deep/ .el-tabs__item:hover {
+      color: #4e46dd;
+    }
+    /deep/ .el-tabs__active-bar {
+      background-color: #4e46dd;
+    }
+    /deep/ .is-active {
+      color: #4e46dd;
+    }
     /deep/ .el-button {
-      background-color: #3159dd;
+      border: 0;
+      background-color: #4e46dd;
       width: 100%;
     }
   }

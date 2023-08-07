@@ -1,18 +1,22 @@
-import Vue from 'vue'
-import App from './App.vue'
-import "./assets/js/el-components.js"
-import './assets/css/reset.css'
-import axios from 'axios'
-import router from './router'
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
+import Vue from "vue";
+import axios from "axios";
+import App from "./App.vue";
+import router from "./router";
+import "./plugins/elements.js";
+import "./assets/css/reset.css";
+import "./assets/js/el-components.js";
 
-Vue.use(ElementUI);
-// axios.defaults.baseURL = ""
-Vue.prototype.$http = axios
-Vue.config.productionTip = false
+axios.defaults.baseURL = "http://open.tikuhai.com";
+axios.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  config.headers.Authorization = token ? `Bearer ${token}` : "";
+  return config;
+});
+// axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("token")}`
+Vue.prototype.$http = axios;
+Vue.config.productionTip = false;
 
 new Vue({
-  render: h => h(App),
-  router
-}).$mount('#app')
+  render: (h) => h(App),
+  router,
+}).$mount("#app");
