@@ -1,7 +1,6 @@
 <template>
   <div>
     <el-card
-      class="box-card"
       shadow="always"
     >
       <el-row :gutter="20">
@@ -28,7 +27,7 @@
 
 <script>
 export default {
-  name: "adminDashboard",
+  name: "AdminDashboard",
   data() {
     return {
       basicDatas: [

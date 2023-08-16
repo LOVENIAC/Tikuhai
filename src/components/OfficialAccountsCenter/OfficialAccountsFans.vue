@@ -76,7 +76,7 @@
 
 <script>
 export default {
-  name: "officialAccountsFans",
+  name: "OfficialAccountsFans",
   created() {
     this.getFansList();
   },
@@ -86,7 +86,6 @@ export default {
       const { data: res } = await this.$http.get("/v1/getFansList", {
         params: this.queryInfo,
       });
-      console.log(res);
       if (res.code !== 200) return this.$message.error(res.msg);
       this.total = res.data.total;
       this.fansList = res.data.data;
@@ -192,12 +191,6 @@ export default {
         }
       }
     }
-  }
-  .el-breadcrumb {
-    margin-bottom: 15px;
-  }
-  /deep/ .el-pager li.active {
-    color: #4e46dd;
   }
   .el-button {
     background-color: #4e46dd;

@@ -6,14 +6,14 @@
       <el-breadcrumb-item>公众号列表</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 主体内容 -->
-    <el-card class="box-card">
+    <el-card>
       <!-- 授权按钮 -->
-      <el-button @click="goToAuth()" class="accredit-btn">添加授权</el-button>
+      <el-button
+        @click="goToAuth()"
+        class="accredit-btn"
+      >添加授权</el-button>
       <!-- 公众号列表 -->
-      <el-table
-        :data="officalAccounts"
-        style="width: 100%"
-      >
+      <el-table :data="officalAccounts">
         <el-table-column
           label="创建日期"
           width="180"
@@ -94,19 +94,25 @@
         <!-- 主体名称 -->
         <el-table-column
           label="主体信息"
-          width="150"
+          width="220"
           prop="principal_name"
         ></el-table-column>
         <!-- 公众号状态 -->
-        <el-table-column
-          label="状态"
-          width="100"
-        >
+        <el-table-column label="状态">
           <template slot-scope="scope">
             <el-tag
               :type="scope.row.account_status===1? 'success': 'danger'"
               size="medium"
             >{{ scope.row.account_status | accountStatus}}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-tag
+              @click="editOfficialAccount(scope.row.id)"
+              style="background-color: #4e46dd;color: white;cursor: pointer;"
+              size="medium"
+            >编辑</el-tag>
           </template>
         </el-table-column>
       </el-table>
@@ -116,7 +122,7 @@
 
 <script>
 export default {
-  name: "officialAccountsList",
+  name: "OfficialAccountsList",
   filters: {
     dataInterception(value) {
       return value.slice(0, 10);
@@ -162,46 +168,54 @@ export default {
       }
     },
   },
-  created(){
-    this.getAuthUrl()
-    this.getOfficalAccounts()
+  created() {
+    this.getAuthUrl();
+    this.getOfficalAccounts();
   },
   data() {
     return {
-      authUrl: '',
+      authUrl: "",
       officalAccounts: [],
     };
   },
-  methods:{
+  methods: {
     // 获取授权链接
-    async getAuthUrl(){
-      const { data:res } = await this.$http.get('http://open.tikuhai.com/v1/gzhAuthUrl')
+    async getAuthUrl() {
+      const { data: res } = await this.$http.get(
+        "http://open.tikuhai.com/v1/gzhAuthUrl"
+      );
       this.authUrl = res.data.url;
     },
-    goToAuth(){
-      window.open(this.authUrl,'_blank');
+    goToAuth() {
+      window.open(this.authUrl, "_blank");
     },
-    async getOfficalAccounts(){
-      const { data:res } = await this.$http.get('http://open.tikuhai.com/v1/getMpList')
+    async getOfficalAccounts() {
+      const { data: res } = await this.$http.get(
+        "http://open.tikuhai.com/v1/getMpList"
+      );
       this.officalAccounts = res.data;
-    }
-  }
+    },
+    editOfficialAccount(id) {
+      // this.$emit("addTab", {
+      //   authName: "公众号配置",
+      //   path: `/admin/editOfficialAccount/${id}`,
+      // });
+      this.$router.push(`/admin/editOfficialAccount/${id}`);
+    },
+  },
 };
 </script>
 
 <style lang="less" scoped>
-.el-breadcrumb {
-  margin-bottom: 15px;
-}
 .wrapper {
   .accredit-btn {
     background-color: #4e46dd;
     color: #fff;
   }
-  /deep/ .el-table__body{
+  /deep/ .el-table__body {
     width: 100% !important;
   }
-  /deep/ .el-table__header{
+  /deep/ .el-table__header {
     width: 100% !important;
   }
 }

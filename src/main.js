@@ -2,8 +2,8 @@ import Vue from "vue";
 import axios from "axios";
 import App from "./App.vue";
 import router from "./router";
-import "./plugins/elements.js";
 import "./assets/css/reset.css";
+import "./plugins/elements.js";
 import "./assets/js/el-components.js";
 
 axios.defaults.baseURL = "http://open.tikuhai.com";

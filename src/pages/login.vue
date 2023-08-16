@@ -12,101 +12,129 @@
       </div>
       <div class="user-login-main">
         <el-tabs>
-          <!-- tab 登录 -->
-          <el-tab-pane label="用户登录">
-            <el-form
-              :rules="rules"
-              :model="loginForm"
-              ref="loginForm"
-            >
-              <el-form-item prop="email">
-                <el-input
-                  placeholder="邮箱/手机号"
-                  v-model="loginForm.email"
-                ></el-input>
-              </el-form-item>
-              <el-form-item prop="password">
-                <el-input
-                  type="password"
-                  placeholder="密码"
-                  autocomplete="off"
-                  v-model="loginForm.password"
-                  show-password
-                ></el-input>
-              </el-form-item>
-              <el-form-item
-                prop="verifyCode"
-                class="verify-code"
+          <!-- 账号密码登录 -->
+          <template v-if="!wechatLogin">
+            <!-- tab 登录 -->
+            <el-tab-pane label="用户登录">
+              <el-form
+                :rules="rules"
+                :model="loginForm"
+                ref="loginForm"
               >
-                <el-input
-                  placeholder="验证码"
-                  autocomplete="off"
-                  v-model="loginForm.verifyCode"
-                ></el-input>
-                <!-- 验证码 -->
-                <el-image
-                  :src="captcha_img"
-                  @click.native="chagneCode()"
-                ></el-image>
-              </el-form-item>
-              <el-form-item>
-                <el-button
-                  type="primary"
-                  @click="submitForm('loginForm')"
-                >登录</el-button>
-              </el-form-item>
-            </el-form>
-          </el-tab-pane>
-          <!-- tab 注册 -->
-          <el-tab-pane label="用户注册">
-            <el-form
-              :rules="rules"
-              :model="registerForm"
-              ref="registerForm"
-            >
-              <el-form-item prop="email">
-                <el-input
-                  placeholder="邮箱/手机号"
-                  v-model="registerForm.email"
-                ></el-input>
-              </el-form-item>
-              <el-form-item prop="password">
-                <el-input
-                  type="password"
-                  placeholder="密码"
-                  autocomplete="off"
-                  v-model="registerForm.password"
-                  show-password
-                ></el-input>
-              </el-form-item>
-              <el-form-item
-                prop="dynamicVerifyCode"
-                class="dynamicVerifyCode"
+                <el-form-item prop="email">
+                  <el-input
+                    placeholder="邮箱/手机号"
+                    v-model="loginForm.email"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item prop="password">
+                  <el-input
+                    type="password"
+                    placeholder="密码"
+                    autocomplete="off"
+                    v-model="loginForm.password"
+                    show-password
+                  ></el-input>
+                </el-form-item>
+                <el-form-item
+                  prop="verifyCode"
+                  class="verify-code"
+                >
+                  <el-input
+                    placeholder="验证码"
+                    autocomplete="off"
+                    v-model="loginForm.verifyCode"
+                  ></el-input>
+                  <!-- 验证码 -->
+                  <el-image
+                    :src="captcha_img"
+                    @click.native="chagneCode()"
+                  ></el-image>
+                </el-form-item>
+                <el-form-item>
+                  <el-button
+                    type="primary"
+                    @click="submitForm('loginForm')"
+                  >登录</el-button>
+                </el-form-item>
+              </el-form>
+              <!-- 第三方登录 -->
+              <div class="user-social-login">
+                <div>——&nbsp;&nbsp;第三方登录&nbsp;&nbsp;——</div>
+                <div
+                  class="social-logo"
+                  @click="getWeChatQRCode()"
+                >
+                  <img
+                    src="@/assets/img/wechat-logo-color.png"
+                    alt="微信登录"
+                  >
+                </div>
+              </div>
+            </el-tab-pane>
+            <!-- tab 注册 -->
+            <el-tab-pane label="用户注册">
+              <el-form
+                :rules="rules"
+                :model="registerForm"
+                ref="registerForm"
               >
-                <el-input
-                  placeholder="验证码"
-                  autocomplete="off"
-                  v-model="registerForm.dynamicVerifyCode"
-                ></el-input>
-                <!-- 验证码 -->
-                <el-button
-                  type="text"
-                  :disabled="isDisbaled"
-                  @click="vertifyCode()"
-                >{{ codeBtnContent }}</el-button>
-              </el-form-item>
-              <el-form-item>
-                <el-button
-                  type="primary"
-                  @click="submitForm('registerForm')"
-                >注册</el-button>
-              </el-form-item>
-            </el-form>
-          </el-tab-pane>
+                <el-form-item prop="email">
+                  <el-input
+                    placeholder="邮箱/手机号"
+                    v-model="registerForm.email"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item prop="password">
+                  <el-input
+                    type="password"
+                    placeholder="密码"
+                    autocomplete="off"
+                    v-model="registerForm.password"
+                    show-password
+                  ></el-input>
+                </el-form-item>
+                <el-form-item
+                  prop="dynamicVerifyCode"
+                  class="dynamicVerifyCode"
+                >
+                  <el-input
+                    placeholder="验证码"
+                    autocomplete="off"
+                    v-model="registerForm.dynamicVerifyCode"
+                  ></el-input>
+                  <!-- 验证码 -->
+                  <el-button
+                    type="text"
+                    :disabled="isDisbaled"
+                    @click="vertifyCode()"
+                  >{{ codeBtnContent }}</el-button>
+                </el-form-item>
+                <el-form-item>
+                  <el-button
+                    type="primary"
+                    @click="submitForm('registerForm')"
+                  >注册</el-button>
+                </el-form-item>
+              </el-form>
+            </el-tab-pane>
+          </template>
+          <!-- 微信扫码登录 -->
+          <template v-else>
+            <div class="weChatloginBox">
+              <el-image
+                v-loading="loading"
+                style="width: 200px; height: 200px"
+                :src="qRCode"
+              ></el-image>
+              <span class="tips">微信扫码关注登录</span>
+              <span
+                @click="cancelWeChatLogin()"
+                class="back-btn"
+              >取消</span>
+            </div>
+          </template>
         </el-tabs>
-      </div>
-      <div class="user-social-login">
-        <span @click="submitForm('loginForm')">第三方登录</span>
       </div>
     </div>
     <!-- 验证码弹窗 -->
@@ -145,17 +173,37 @@
 export default {
   name: "user-login",
   data() {
+    var checkAccount = (rule, value, callback) => {
+      const phoneReg = /^1[34578]\d{9}$$/;
+      const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
+      if (!value) {
+        return callback(new Error("邮箱/手机号不能为空"));
+      }
+      setTimeout(() => {
+        if (value.includes("@")) {
+          if (mailReg.test(value)) {
+            callback();
+          } else {
+            callback(new Error("请输入正确的邮箱格式"));
+          }
+        } else {
+          if (phoneReg.test(value)) {
+            callback();
+          } else {
+            callback(new Error("请输入正确的邮箱/手机号"));
+          }
+        }
+      }, 500);
+    };
     return {
+      timer: "",
+      loading: true,
+      wechatLogin: false,
+      weChatKey: "",
+      qRCode: "",
       dialogVisible: false,
       rules: {
-        email: [
-          {
-            type: "email",
-            message: "请输入正确的邮箱地址",
-            trigger: ["blur", "change"],
-          },
-          { required: true, message: "邮箱不能为空", trigger: "blur" },
-        ],
+        email: [{ validator: checkAccount, trigger: "blur" }],
         password: [
           { required: true, message: "密码不能为空", trigger: "blur" },
           { min: 6, max: 20, message: "密码6-20位", trigger: "blur" },
@@ -187,9 +235,9 @@ export default {
     };
   },
   beforeCreate() {
-    this.$http.get("/v1/u/info").then(res=>{
-      if(res.data.code===200) this.$router.push('/admin');
-    })
+    this.$http.get("/v1/u/info").then((res) => {
+      if (res.data.code === 200) this.$router.push("/admin");
+    });
   },
   async mounted() {
     const { data: res } = await this.$http.get("/v1/captcha");
@@ -197,11 +245,20 @@ export default {
     this.captcha_key = res.data.captcha_key;
   },
   methods: {
+    // 判断账户是手机号/邮箱
+    transAccountObject(obj) {
+      if (!obj.email.includes("@")) {
+        obj.phone = obj.email;
+        delete obj.email;
+      }
+    },
     // 获取静态验证码
     async vertifyCode() {
-      const { data: res } = await this.$http.post("/v1/captcha1", {
+      let submitForm = {
         email: this.registerForm.email,
-      });
+      };
+      this.transAccountObject(submitForm);
+      const { data: res } = await this.$http.post("/v1/captcha1", submitForm);
       if (res.code !== 200) this.$message.error(res.msg);
       else {
         this.captcha_img = res.data.captcha_img;
@@ -212,13 +269,16 @@ export default {
     // dialog确认发送动态验证码
     async sendDynamicVerifyCode() {
       let _this = this;
-      const { data: res } = await this.$http.post("/v1/sendCode", {
+      let submitForm = {
         email: _this.registerForm.email,
         key: _this.captcha_key,
         code: _this.registerForm.verifyCode,
-      });
+      };
+      // 判断邮箱还是手机号
+      this.transAccountObject(submitForm);
+      const { data: res } = await this.$http.post("/v1/sendCode", submitForm);
       if (res.code === 200) {
-        this.$message.success("发送验证码成功，请去邮箱查看～");
+        this.$message.success("发送验证码成功，请去邮箱/手机查看～");
         this.setTime();
         this.dialogVisible = false;
         this.registerForm.email_key = res.data.email_key;
@@ -228,6 +288,7 @@ export default {
           this.dialogVisible = false;
           this.registerForm.email_key = res.data.email_key;
         }
+        this.registerForm.verifyCode = '';
         this.$message.error(res.msg);
       }
     },
@@ -276,12 +337,15 @@ export default {
       //     password: _this.loginForm.password,
       //   }
       // );
-      let { data: res } = await this.$http.post("/v1/u/login", {
+      let submitForm = {
         key: _this.captcha_key,
         code: _this.loginForm.verifyCode,
         email: _this.loginForm.email,
         password: _this.loginForm.password,
-      });
+      };
+      // 判断邮箱还是手机号
+      this.transAccountObject(submitForm);
+      let { data: res } = await this.$http.post("/v1/u/login", submitForm);
       if (res.code === 200) {
         localStorage.setItem("token", res.data.token);
         this.$message.success("登录成功～");
@@ -291,6 +355,7 @@ export default {
         this.chagneCode();
       }
     },
+    //注册
     async register() {
       let _this = this;
       // console.log(        {
@@ -300,19 +365,57 @@ export default {
       //     password: _this.registerForm.password,
       //     password_confirmation: _this.registerForm.password,
       //   });
-      let { data: res } = await this.$http.post("/v1/register", {
+      let submitForm = {
         key: _this.registerForm.email_key,
         code: _this.registerForm.dynamicVerifyCode,
         email: _this.registerForm.email,
         password: _this.registerForm.password,
         password_confirmation: _this.registerForm.password,
-      });
+      };
+      // 判断邮箱还是手机号
+      this.transAccountObject(submitForm);
+      let { data: res } = await this.$http.post("/v1/register", submitForm);
       if (res.code !== 200) this.$message.error(res.msg);
       else {
         localStorage.setItem("token", res.data.token);
         this.$message.success("注册成功～");
         _this.$router.push("/admin");
       }
+    },
+    // 获取微信登录二维码
+    async getWeChatQRCode() {
+      this.wechatLogin = true;
+      const { data: res } = await this.$http.get("/v1/scanLogin");
+      this.qRCode = res.data.qrcode;
+      this.loading = false;
+      this.weChatKey = res.data.key;
+      this.timer = setInterval(this.checkWechatLogin, 2000);
+    },
+    // 取消微信登录
+    cancelWeChatLogin() {
+      clearInterval(this.timer);
+      this.timer = null;
+      this.wechatLogin = false;
+      this.loading = true;
+    },
+    // 监听登录情况
+    checkWechatLogin() {
+      const _this = this;
+      this.$http
+        .get("/v1/scanLoginCheck", {
+          params: {
+            key: this.weChatKey,
+          },
+        })
+        .then((res) => {
+          if (res.data.code === 200) {
+            clearInterval(_this.timer);
+            _this.timer = null;
+            localStorage.setItem("token", res.data.data.token);
+            _this.$message.success("登录成功～");
+            _this.$router.push("/admin");
+          }
+        });
     },
   },
 };
@@ -334,6 +437,30 @@ export default {
     border-radius: 0 !important;
   }
 }
+.weChatloginBox {
+  text-align: center;
+  width: 100%;
+  .back-icon {
+    color: #497ef2;
+    text-align: left;
+    i {
+      font-size: 30px;
+    }
+  }
+  .tips {
+    margin-top: 10px;
+    color: #1aad19;
+  }
+  .back-btn {
+    margin-top: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bolder;
+  }
+  span {
+    display: block;
+  }
+}
 .user-login-top {
   margin-bottom: 22px;
   text-align: left;
@@ -341,7 +468,7 @@ export default {
   font-weight: bolder;
 }
 .user-login-container {
-  background-color: #fff;
+  background-color: #efeeee;
   border: 1px solid #eaeaea;
   border-radius: 10px;
   padding: 25px;
@@ -350,6 +477,9 @@ export default {
   min-width: 280px;
   margin: 0 auto;
   .user-login-main {
+    /deep/ .el-tabs__content {
+      overflow: visible;
+    }
     /deep/ .verify-code .el-form-item__content {
       display: flex;
       flex-direction: row;
@@ -413,6 +543,37 @@ export default {
     cursor: pointer;
     width: 100px;
     color: white;
+  }
+}
+.user-social-login {
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+  .social-logo {
+    margin: 20px auto 0 auto;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.2),
+      -10px -10px 15px rgba(255, 255, 255, 1);
+    border-radius: 10px;
+    transition: all 0.2s ease-out;
+    img {
+      width: 40px;
+      height: 40px;
+      transition: all 0.2s ease-out;
+    }
+  }
+  .social-logo:hover {
+    cursor: pointer;
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0.2), 0 0 0 rgba(255, 255, 255, 1),
+      inset 10px 10px 15px rgba(0, 0, 0, 0.1),
+      inset -10px -10px 15px rgba(255, 255, 255, 1);
+    img {
+      width: 38px;
+    }
   }
 }
 </style>

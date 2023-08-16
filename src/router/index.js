@@ -3,9 +3,14 @@ import VueRouter from "vue-router";
 import userLogin from "@/pages/login";
 import userIndex from "@/pages/index";
 import userAdmin from "@/pages/admin";
-import dashboard from "@/components/dashboard";
-import officialAccountsFans from "@/components/officialAccountsFans";
-import officialAccountsList from "@/components/officialAccountsList";
+import AdminDashboard from "@/components/Dashboard";
+import OfficialAccountsFans from "@/components/OfficialAccountsCenter/OfficialAccountsFans";
+import OfficialAccountsList from "@/components/OfficialAccountsCenter/OfficialAccountsList";
+import AccountSettings from "@/components/financeCenter/AccountSettings"
+import WithdrawalRecord from "@/components/financeCenter/WithdrawalRecords"
+import BalanceDetail from "@/components/financeCenter/BalanceDetail"
+import EditOfficialAccount from "@/components/OfficialAccountsCenter/EditOfficialAccount"
+
 
 let originPush = VueRouter.prototype.push; //备份原push方法
 
@@ -46,7 +51,7 @@ const router = new VueRouter({
     {
       path: "/admin",
       component: userAdmin,
-      redirect: "/admin/dashboard",
+      redirect: "/admin/Dashboard",
       meta: {
         title: "管理后台",
       },
@@ -54,20 +59,44 @@ const router = new VueRouter({
         {
           path: "dashboard",
           name: "dashboard",
-          component: dashboard,
-          meta: { title: "管理后台" },
+          component: AdminDashboard,
+          meta: { title: "概览" },
         },
         {
           path: "officialAccountsFans",
           name: "officialAccountsFans",
-          component: officialAccountsFans,
-          meta: { title: "管理后台" },
+          component: OfficialAccountsFans,
+          meta: { title: "公众号粉丝" },
         },
         {
           path: "officialAccountsList",
           name: "officialAccountsList",
-          component: officialAccountsList,
-          meta: { title: "管理后台" },
+          component: OfficialAccountsList,
+          meta: { title: "公众号列表" },
+        },
+        {
+          path: "accountSettings",
+          name: "accountSettings",
+          component: AccountSettings,
+          meta: { title: "提现配置" },
+        },
+        {
+          path: "withdrawalRecord",
+          name: "withdrawalRecord",
+          component: WithdrawalRecord,
+          meta: { title: "提现记录" },
+        },
+        {
+          path: "balanceDetail",
+          name: "balanceDetail",
+          component: BalanceDetail,
+          meta: { title: "余额明细" },
+        },
+        {
+          path: "editOfficialAccount/:id",
+          name: "editOfficialAccount",
+          component: EditOfficialAccount,
+          meta: { title: "公众号配置" },
         },
       ],
     },
@@ -77,21 +106,22 @@ const router = new VueRouter({
     },
   ],
 });
-router.beforeEach((to, from, next) => {
-  /* 路由发生变化修改页面title */
-  if (to.meta.title) {
-    document.title = to.meta.title;
-  }
-  const token = localStorage.getItem("token");
-  if (to.path === "/admin") {
-    if (token) {
-      next();
-    } else {
-      next("/login");
-    }
-  } else {
-    next();
-  }
-});
+
+// router.beforeEach((to, from, next) => {
+//   /* 路由发生变化修改页面title */
+//   if (to.meta.title) {
+//     document.title = to.meta.title;
+//   }
+//   const token = localStorage.getItem("token");
+//   if (to.path === "/admin") {
+//     if (token) {
+//       next();
+//     } else {
+//       next("/login");
+//     }
+//   } else {
+//     next();
+//   }
+// });
 
 export default router;
