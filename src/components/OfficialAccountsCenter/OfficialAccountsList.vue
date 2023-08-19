@@ -211,6 +211,7 @@ export default {
   .accredit-btn {
     background-color: #4e46dd;
     color: #fff;
+    border-color: #4e46dd;
   }
   /deep/ .el-table__body {
     width: 100% !important;
