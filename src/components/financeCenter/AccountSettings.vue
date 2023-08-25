@@ -184,7 +184,7 @@ export default {
       const { data: res } = await this.$http.post("/v1/u/infoExtraEdit", {
         real_name: this.accountSettingsForm.name,
         withdrawal_method:
-          this.accountSettingsForm.collectionMethods === "支付宝" ? "1" : "2",
+          this.accountSettingsForm.collectionMethods === "支付宝" ? 0 : 1,
         receipt_code: this.accountSettingsForm.collectionQRCOde,
         phone_number: this.accountSettingsForm.contactInfo,
         service_qr_code: this.accountSettingsForm.serviceQRCode,
@@ -204,10 +204,10 @@ export default {
       if (res.code === 200) {
         this.accountSettingsForm.name = res.data.real_name;
         this.accountSettingsForm.collectionMethods =
-          res.data.withdrawal_method === 1 ? "支付宝" : "微信";
+          res.data.withdrawal_method === 0 ? "支付宝" : "微信";
         // 添加图片到列表，并隐藏上传
         this.accountSettingsForm.collectionQRCOde = res.data.receipt_code;
-        if (res.data.receipt_code !== "" && this.collectionQRCOdeUrl.length === 0) {
+        if (res.data.receipt_code && this.collectionQRCOdeUrl.length === 0) {
           this.collectionQRCOdeUrl.unshift({
             name: "collection.jpg",
             url: res.data.receipt_code,
@@ -215,7 +215,7 @@ export default {
           this.collectionHideUpload = true;
         }
         this.accountSettingsForm.serviceQRCode = res.data.service_qr_code;
-        if (res.data.service_qr_code !== "" && this.serviceQRCodeUrl.length === 0) {
+        if (res.data.service_qr_code && this.serviceQRCodeUrl.length === 0) {
           this.serviceQRCodeUrl.unshift({
             name: "service.jpg",
             url: res.data.service_qr_code,

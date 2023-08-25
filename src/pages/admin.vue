@@ -37,7 +37,7 @@
     <!-- 页面主体区域 -->
     <el-container>
       <!-- 侧边栏 -->
-      <el-aside v-if="!isMobile">
+      <el-aside width="230px" v-if="!isMobile">
         <!-- 侧边栏菜单区域 -->
         <el-menu
           active-text-color="#4e46dd"
@@ -248,6 +248,12 @@ export default {
             },
           ],
         },
+        {
+          id: 40,
+          authName: "账户信息",
+          icon: "el-icon-user",
+          path: "/admin/dashboard",
+        },
       ],
     };
   },
@@ -292,7 +298,7 @@ export default {
     .el-tabs {
       max-width: 700px;
       position: absolute;
-      left: 300px;
+      left: 230px;
       align-self: flex-end;
       /deep/ .el-tabs__header {
         user-select: none;
@@ -332,5 +338,9 @@ export default {
   overflow-y: auto;
   background-color: #f1f1f1;
   box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.15) !important;
+}
+/deep/ .el-tabs__item:focus.is-active.is-focus:not(:active) {
+      box-shadow: 0 0;
+      border-radius: 0;
 }
 </style>
