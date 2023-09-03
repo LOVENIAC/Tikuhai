@@ -182,7 +182,7 @@ export default {
     // 获取授权链接
     async getAuthUrl() {
       const { data: res } = await this.$http.get(
-        "http://open.tikuhai.com/v1/gzhAuthUrl"
+        "/v1/gzhAuthUrl"
       );
       this.authUrl = res.data.url;
     },
@@ -191,7 +191,7 @@ export default {
     },
     async getOfficalAccounts() {
       const { data: res } = await this.$http.get(
-        "http://open.tikuhai.com/v1/getMpList"
+        "/v1/getMpList"
       );
       this.officalAccounts = res.data;
     },

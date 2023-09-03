@@ -250,9 +250,9 @@ export default {
         },
         {
           id: 40,
-          authName: "账户信息",
-          icon: "el-icon-user",
-          path: "/admin/dashboard",
+          authName: "个人信息",
+          icon: "el-icon-user-solid",
+          path: "/admin/userInfo",
         },
       ],
     };

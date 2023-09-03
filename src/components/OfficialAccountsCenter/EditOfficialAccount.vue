@@ -98,7 +98,7 @@ export default {
   methods: {
     async getofficialAccountConfig(id) {
       const { data: res } = await this.$http.get(
-        "http://open.tikuhai.com/v1/getMpConfig",
+        "/v1/getMpConfig",
         { params: { gzh_id: id } }
       );
       this.needTrans("total_switch", "int", res.data);
@@ -126,7 +126,7 @@ export default {
       this.needTrans("voice_search", "boolean", transForm);
       this.needTrans("image_search", "boolean", transForm);
       const { data: res } = await this.$http.post(
-        "http://open.tikuhai.com/v1/setMpConfig",
+        "/v1/setMpConfig",
         transForm
       );
       if (res.code === 200) {

@@ -10,6 +10,8 @@ import AccountSettings from "@/components/financeCenter/AccountSettings"
 import WithdrawalRecord from "@/components/financeCenter/WithdrawalRecords"
 import BalanceDetail from "@/components/financeCenter/BalanceDetail"
 import EditOfficialAccount from "@/components/OfficialAccountsCenter/EditOfficialAccount"
+import UserInfo from "@/components/UserInfo";
+
 
 
 let originPush = VueRouter.prototype.push; //备份原push方法
@@ -37,9 +39,6 @@ const router = new VueRouter({
     {
       path: "/",
       component: userIndex,
-      meta: {
-        title: "题库海",
-      },
     },
     {
       path: "/login",
@@ -98,6 +97,12 @@ const router = new VueRouter({
           component: EditOfficialAccount,
           meta: { title: "公众号配置" },
         },
+        {
+          path: "userInfo",
+          name: "userInfo",
+          component: UserInfo,
+          meta: { title: "个人信息" },
+        },
       ],
     },
     {
@@ -107,21 +112,21 @@ const router = new VueRouter({
   ],
 });
 
-// router.beforeEach((to, from, next) => {
-//   /* 路由发生变化修改页面title */
-//   if (to.meta.title) {
-//     document.title = to.meta.title;
-//   }
-//   const token = localStorage.getItem("token");
-//   if (to.path === "/admin") {
-//     if (token) {
-//       next();
-//     } else {
-//       next("/login");
-//     }
-//   } else {
-//     next();
-//   }
-// });
+router.beforeEach((to, from, next) => {
+  /* 路由发生变化修改页面title */
+  if (to.meta.title) {
+    document.title = to.meta.title;
+  }
+  const token = localStorage.getItem("token");
+  if (to.path === "/admin") {
+    if (token) {
+      next();
+    } else {
+      next("/login");
+    }
+  } else {
+    next();
+  }
+});
 
 export default router;

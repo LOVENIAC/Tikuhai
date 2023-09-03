@@ -6,7 +6,7 @@ import "./assets/css/reset.css";
 import "./plugins/elements.js";
 import "./assets/js/el-components.js";
 
-axios.defaults.baseURL = "http://open.tikuhai.com";
+axios.defaults.baseURL = "https://www.tikuhai.com";
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   config.headers.Authorization = token ? `Bearer ${token}` : "";

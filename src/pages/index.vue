@@ -12,12 +12,12 @@
           <img src="@/assets/logo.png" style="width: 40px; margin-right: 10px;" alt="">  
           <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">题库海</span></a>
           <div class="flex items-center lg:order-2">
-            <router-link
+            <div
               class="btn btn-primary"
-              to="/login"
+              @click="login"
             >
               登录注册
-            </router-link>
+            </div>
             <button
               data-collapse-toggle="mobile-menu-2"
               type="button"
@@ -66,10 +66,10 @@
           <p class="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
             查题吧是专属于大学生的优质内容互动平台。以精选资讯+校内资源服务+助力校园社交的模式，全面覆盖同学们的学习、工作、生活、娱乐。 </p>
           <div class="space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
-            <router-link
+            <div
               class="btn btn-primary"
-              to="/login"
-            >快速开始</router-link>
+              @click="login"
+            >快速开始</div>
           </div>
         </div>
         <div class="hidden lg:mt-0 lg:col-span-5 lg:flex"><img
@@ -277,12 +277,12 @@ l3 62 35 -62 c49 -88 60 -83 60 27 0 53 -4 90 -10 90 -6 0 -10 -31 -10 -72 l0
             <p class="mt-4 text-gray-600">
               稳定运营时间久的校园第三方公众号服务开发管理平台
             </p>
-            <router-link
+            <div
               class="mt-8 inline-block rounded bg-indigo-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-indigo-700 focus:outline-none focus:ring focus:ring-yellow-400"
-              to="/login"
+              @click="login"
             >
               查看更多
-            </router-link>
+            </div>
           </div>
           <div class="grid grid-cols-2 gap-4 sm:grid-cols-3"><a
               href="#"
@@ -354,12 +354,12 @@ l3 62 35 -62 c49 -88 60 -83 60 27 0 53 -4 90 -10 90 -6 0 -10 -31 -10 -72 l0
           <h2 class="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-gray-900 dark:text-white">立即开始
             享受你的海量题库</h2>
           <p class="mb-6 font-light text-gray-500 dark:text-gray-400 md:text-lg">现在注册就送100次调用</p>
-          <router-link
+          <div
             class="btn btn-primary"
-            to="/login"
+            @click="login"
           >
             快速开始
-          </router-link>
+          </div>
         </div>
       </div>
     </section>
@@ -381,9 +381,22 @@ l3 62 35 -62 c49 -88 60 -83 60 27 0 53 -4 90 -10 90 -6 0 -10 -31 -10 -72 l0
 <script>
 export default {
   name: "userIndex",
+  beforeCreate(){
+    this.$http.get('/webInfo').then(res=>{
+      document.title = res.data.data.web_name;
+    })
+    // const { data:res } = await this.$http.get('/webInfo');
+    // document.title = res.data.web_name;
+    // console.log(res);
+    //  = '题库海'
+  },
   methods: {
     login() {
-      this.$router.push("/login");
+      if(localStorage.getItem("token")){
+        this.$router.push("/admin");
+      }else{
+        this.$router.push("/login");
+      }
     },
   },
 };

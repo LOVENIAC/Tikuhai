@@ -99,7 +99,7 @@ export default {
       dialogVisible: false,
       collectionHideUpload: false,
       serviceHideUpload: false,
-      uploadUrl: "http://open.tikuhai.com/v1/u/upload",
+      uploadUrl: "http://www.tikuhai.com/v1/u/upload",
       headers: {},
       collectionQRCOdeUrl: [],
       serviceQRCodeUrl: [],
@@ -199,7 +199,7 @@ export default {
     },
     async getAccountSettings() {
       const { data: res } = await this.$http.get(
-        "http://open.tikuhai.com/v1/u/infoExtra"
+        "/v1/u/infoExtra"
       );
       if (res.code === 200) {
         this.accountSettingsForm.name = res.data.real_name;

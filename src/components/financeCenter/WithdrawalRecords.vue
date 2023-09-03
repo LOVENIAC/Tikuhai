@@ -26,26 +26,26 @@
         style="width: 100%"
       >
         <el-table-column
-          prop="date"
+          prop="created_at"
           label="申请时间"
         >
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="commission"
           label="手续费"
         >
         </el-table-column>
         <el-table-column
           label="到账金额"
-          prop="address"
+          prop="amount"
         >
         </el-table-column>
         <el-table-column label="状态">
           <template slot-scope="scope">
             <el-tag
-              :type="scope.row.status === '已完成' ? 'success' : 'primary'"
+              :type="scope.row.status === 0 ? 'success' : 'primary'"
               disable-transitions
-            >{{scope.row.status}}</el-tag>
+            >{{ scope.row.status === 0 ? '已完成' : '处理中' }}</el-tag>
           </template>
         </el-table-column>
       </el-table>
@@ -73,9 +73,29 @@ export default {
     this.getWithdrawalRecords();
   },
   methods: {
-    // 获取粉丝列表
+    accountSettings() {
+      this.$emit("addTab", {
+        authName: "提现配置",
+        path: "/admin/accountSettings",
+      });
+      this.$router.push("/admin/accountSettings");
+    },
+    // 获取提现记录
     async getWithdrawalRecords() {
-      console.log("send request.");
+      const { data: res } = await this.$http.get("/v1/u/withdrawalList", {
+        params: this.queryInfo,
+      });
+      console.log(res);
+      let tableData = [];
+      res.data.data.forEach((element) => {
+        tableData.push({
+          created_at: element.created_at,
+          amount: element.amount / 100,
+          commission: element.commission / 100,
+          status: element.status,
+        });
+      });
+      this.tableData = tableData;
     },
     // 切换页面条数
     handleCurrentChange(newPage) {
@@ -95,32 +115,7 @@ export default {
         page: 1,
       },
       total: 0,
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "0",
-          address: "2345.49",
-          status: "已完成",
-        },
-        {
-          date: "2016-05-04",
-          name: "0",
-          address: "2532.52",
-          status: "已完成",
-        },
-        {
-          date: "2016-05-01",
-          name: "0",
-          address: "1352.53",
-          status: "已完成",
-        },
-        {
-          date: "2016-05-03",
-          name: "0",
-          address: "132.54",
-          status: "处理中",
-        },
-      ],
+      tableData: [],
     };
   },
 };
@@ -135,7 +130,7 @@ export default {
     font-size: 18px;
     margin-right: 5px;
   }
-  strong{
+  strong {
     cursor: pointer;
   }
   display: flex;

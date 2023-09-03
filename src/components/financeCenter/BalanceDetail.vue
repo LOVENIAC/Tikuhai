@@ -21,8 +21,11 @@
       </div>
       <!-- 用户提现 -->
       <div class="withdrawal-box">
-        <span style="font-weight: bold;">可用余额：523 元</span>
-        <div class="withdrawal-btn" @click="userWithdrawal()">我要提现</div>
+        <span style="font-weight: bold;">可用余额：0 元</span>
+        <div
+          class="withdrawal-btn"
+          @click="userWithdrawal()"
+        >我要提现</div>
         <span style="color: #909399;">冻结：0 元</span>
       </div>
       <!-- 提现记录表单 -->
@@ -32,22 +35,22 @@
         style="width: 100%"
       >
         <el-table-column
-          prop="date"
+          prop="created_at"
           label="时间"
         >
         </el-table-column>
         <el-table-column
-          prop="money"
+          prop="amount"
           label="变动金额（元）"
         >
         </el-table-column>
         <el-table-column
-          prop="address"
+          prop="type"
           label="资金来源"
         >
         </el-table-column>
         <el-table-column
-          prop="description"
+          prop="remark"
           label="商品说明"
         >
         </el-table-column>
@@ -85,12 +88,39 @@ export default {
       this.$router.push("/admin/accountSettings");
     },
     // 用户提现
-    userWithdrawal(){
-      this.$message.success('申请提交成功')
+    userWithdrawal() {
+      this.$http.get("/v1/u/withdrawal").then((res) => {
+        if (res.data.code == 200) this.$message.success("申请提现成功～");
+        else this.$message.warning(res.data.msg);
+      });
     },
     // 获取余额记录
     async getBalanceDetail() {
-      console.log("send request.");
+      const { data: res } = await this.$http.get("/v1/u/balanceList", {
+        params: this.queryInfo,
+      });
+      let tableData = [];
+      res.data.data.forEach((element) => {
+        let type = "";
+        switch (element.type) {
+          case 0:
+            type = "收入";
+            break;
+          case 1:
+            type = "支出";
+            break;
+          case 2:
+            type = "提现";
+            break;
+        }
+        tableData.push({
+          created_at: element.created_at.slice(0, 10),
+          amount: element.amount / 100,
+          type: type,
+          remark: element.remark,
+        });
+      });
+      this.tableData = tableData;
     },
     // 切换页面条数
     handleCurrentChange(newPage) {
@@ -110,32 +140,7 @@ export default {
         page: 1,
       },
       total: 0,
-      tableData: [
-        {
-          date: "2016-05-02",
-          money: "2351.6",
-          address: "用户提现",
-          description: "用户提现",
-        },
-        {
-          date: "2016-05-04",
-          money: "-5.2",
-          address: "用户退款",
-          description: "套餐购买,粉丝id:1542686",
-        },
-        {
-          date: "2016-05-01",
-          money: "9.9",
-          address: "套餐购买",
-          description: "套餐购买,粉丝id:1672563",
-        },
-        {
-          date: "2016-05-03",
-          money: "8.8",
-          address: "套餐购买",
-          description: "用户退款,订单号:2799516",
-        },
-      ],
+      tableData: [],
     };
   },
 };
