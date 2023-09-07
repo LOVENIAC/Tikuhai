@@ -35,10 +35,14 @@ Vue.use(VueRouter);
 
 const router = new VueRouter({
   mode: "hash",
+  base: "/proxy",
   routes: [
     {
       path: "/",
       component: userIndex,
+      meta: {
+        title: "题库海",
+      },
     },
     {
       path: "/login",

@@ -150,9 +150,8 @@ export default {
   methods: {
     async getUserStatisticalData() {
       const { data: res } = await this.$http.get(
-        "http://www.tikuhai.com/v1/u/statistics"
+        "/v1/u/statistics"
       );
-      console.log(res);
       if (res.code == 200) {
         this.basicDatas[0].value = res.data.user_money / 100;
         this.basicDatas[1].value = res.data.commission_ratio;
