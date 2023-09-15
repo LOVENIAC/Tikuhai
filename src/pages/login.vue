@@ -127,7 +127,7 @@
                 style="width: 200px; height: 200px"
                 :src="qRCode"
               ></el-image>
-              <span class="tips">微信扫码关注登录</span>
+              <span class="tips">{{ tips }}</span>
               <span
                 @click="cancelWeChatLogin()"
                 class="back-btn"
@@ -232,7 +232,15 @@ export default {
       countdown: 60,
       codeBtnContent: "发送验证码",
       isDisbaled: false,
+      tips: '微信扫码关注登录'
     };
+  },
+  created(){
+    var ua = window.navigator.userAgent.toLowerCase();
+  //通过正则表达式匹配ua中是否含有MicroMessenger字符串
+    if (ua.match(/MicroMessenger/i) == 'micromessenger' ) {
+      this.tips = '长按图片，微信扫码关注登录'
+    }
   },
   beforeCreate() {
     this.$http.get("/v1/u/info").then((res) => {
@@ -288,7 +296,7 @@ export default {
           this.dialogVisible = false;
           this.registerForm.email_key = res.data.email_key;
         }
-        this.registerForm.verifyCode = '';
+        this.registerForm.verifyCode = "";
         this.$message.error(res.msg);
       }
     },
@@ -440,6 +448,11 @@ export default {
 .weChatloginBox {
   text-align: center;
   width: 100%;
+  /deep/ .el-image {
+    img {
+      border-radius: 5px;
+    }
+  }
   .back-icon {
     color: #497ef2;
     text-align: left;
